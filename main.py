@@ -198,16 +198,53 @@ class Button:
 
 class GameController(object):
     def __init__(self):
+        self.levels = 0
         pygame.init()
         self.screen = pygame.display.set_mode(SCREENSIZE)
         pygame.display.set_caption("Sudoku")
-        self.board = Grid(N, K, 9, 9, SCREENWIDTH, SCREENHEIGHT - 60)
+        self.board = Grid(N, self.levels, 9, 9, SCREENWIDTH, SCREENHEIGHT - 60)
         self.val = None
         self.start = time.time()
         self.play_time = time.time()
+        self.easy_btn = Button("EASY", 240, 80,(150,170))
+        self.medium_btn = Button("MEDIUM", 240, 80,(150,270))
+        self.hard_btn = Button("HARD", 240, 80,(150,370))
+        self.expert_btn = Button("EXPERT", 240, 80,(150,470))
+    def StartGame(self,screen):
+        while True:
+            screen.fill(WHITE)
+            text = font.render("Choose levels", 1, BLACK)
+            screen.blit(text,(150,80))
+            self.easy_btn.draw(screen)
+            self.medium_btn.draw(screen)
+            self.hard_btn.draw(screen)
+            self.expert_btn.draw(screen)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.easy_btn.check_click():
+                        self.levels = EASY
+                        self.board = Grid(N, self.levels, 9, 9, SCREENWIDTH, SCREENHEIGHT - 60)
+                        self.print()
+                        self.update()
+                    elif self.medium_btn.check_click():
+                        self.levels = MEDIUM
+                        self.board = Grid(N, self.levels, 9, 9, SCREENWIDTH, SCREENHEIGHT - 60)
+                        self.print()
+                        self.update()
+                    elif self.hard_btn.check_click():
+                        self.levels = HARD
+                        self.board = Grid(N, self.levels, 9, 9, SCREENWIDTH, SCREENHEIGHT - 60)
+                        self.print()
+                        self.update()
+                    elif self.expert_btn.check_click():
+                        self.levels = EXPERT
+                        self.board = Grid(N, self.levels, 9, 9, SCREENWIDTH, SCREENHEIGHT - 60)
+                        self.print()
+                        self.update()
+            pygame.display.update()
 
-    def print(self):
-        self.board.Solve()
 
     def Solve(self):
         for i in range(N):
@@ -217,9 +254,14 @@ class GameController(object):
                     self.board.cubes[i][j].set(self.board.board.grid[i][j])
 
     def update(self):
-        self.checkEvent()
+        while True:
+            self.checkEvent()
+
+    def print(self):
+        self.board.Solve()
 
     def checkEvent(self):
+        self.screen.fill(WHITE)
         self.play_time = round(time.time() - self.start)
 
         for event in pygame.event.get():
@@ -279,6 +321,9 @@ class GameController(object):
 
 if __name__ == "__main__":
     game = GameController()
-    game.print()
     while True:
-        game.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit()
+        game.StartGame(game.screen)
+
