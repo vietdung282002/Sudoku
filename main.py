@@ -2,6 +2,7 @@ import pygame
 import time
 from Constant import *
 from Solver import Solver
+from Button import Button
 
 pygame.font.init()
 font = pygame.font.SysFont("comicsans", 40)
@@ -115,10 +116,10 @@ class Cubes:
         x = self.cols * gap
         y = self.rows * gap
         if self.temp != 0 and self.value == 0:
-            text = font.render(str(self.temp), 1, (128, 128, 128))
+            text = font.render(str(self.temp), True, (128, 128, 128))
             screen.blit(text, (x + 5, y + 5))
         elif not (self.value == 0):
-            text = font.render(str(self.value), 1, BLACK)
+            text = font.render(str(self.value), True, BLACK)
             screen.blit(text, (x + (gap / 2 - text.get_width() / 2), y + (gap / 2 - text.get_height() / 2)))
 
         if self.selected:
@@ -126,7 +127,7 @@ class Cubes:
 
         if self.flag == 0:
             pygame.draw.rect(screen, RED, pygame.Rect(x, y, gap, gap))
-            text = font.render(str(self.temp), 1, BLACK)
+            text = font.render(str(self.temp), True, BLACK)
             screen.blit(text, (x + (gap / 2 - text.get_width() / 2), y + (gap / 2 - text.get_height() / 2)))
             for i in range(self.rows + 1):
                 if i % 3 == 0 and i != 0:
@@ -138,7 +139,7 @@ class Cubes:
 
         if self.flag == 2:
             pygame.draw.rect(screen, AQUA, pygame.Rect(x, y, gap, gap))
-            text = font.render(str(self.value), 1, BLACK)
+            text = font.render(str(self.value), True, BLACK)
             screen.blit(text, (x + (gap / 2 - text.get_width() / 2), y + (gap / 2 - text.get_height() / 2)))
             for i in range(self.rows + 1):
                 if i % 3 == 0 and i != 0:
@@ -159,8 +160,8 @@ def redraw_window(screen, board, time):
     screen.fill(WHITE)
     # Draw time
     font = pygame.font.SysFont("comicsans", 35)
-    text = font.render("Time: " + timeToString(time), 1, BLACK)
-    screen.blit(text, (540 - 180, 560))
+    text = font.render("Time: " + timeToString(time), True, BLACK)
+    screen.blit(text, (540 - 180, 540))
     # Draw grid and board
     board.draw(screen)
 
@@ -168,32 +169,9 @@ def redraw_window(screen, board, time):
 def timeToString(secs):
     sec = secs % 60
     minute = secs // 60
-    hour = minute // 60
 
     mat = " " + str(minute) + ":" + str(sec)
     return mat
-
-
-class Button:
-    def __init__(self, text, width, height, pos):
-
-        self.top_rect = pygame.Rect(pos, (width, height))
-        self.top_color = BTN_COLOR
-
-        self.text_surf = font.render(text, True, WHITE)
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, self.top_color, self.top_rect, border_radius=8)
-        screen.blit(self.text_surf, self.text_rect)
-        self.check_click()
-
-    def check_click(self):
-        mouse_pos = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(mouse_pos):
-            if pygame.mouse.get_pressed()[0]:
-                return True
-
 
 
 class GameController(object):
@@ -206,15 +184,16 @@ class GameController(object):
         self.val = None
         self.start = time.time()
         self.play_time = time.time()
-        self.easy_btn = Button("EASY", 240, 80,(150,170))
-        self.medium_btn = Button("MEDIUM", 240, 80,(150,270))
-        self.hard_btn = Button("HARD", 240, 80,(150,370))
-        self.expert_btn = Button("EXPERT", 240, 80,(150,470))
-    def StartGame(self,screen):
+        self.easy_btn = Button("EASY", 240, 80, (150, 170))
+        self.medium_btn = Button("MEDIUM", 240, 80, (150, 270))
+        self.hard_btn = Button("HARD", 240, 80, (150, 370))
+        self.expert_btn = Button("EXPERT", 240, 80, (150, 470))
+
+    def StartGame(self, screen):
         while True:
             screen.fill(WHITE)
-            text = font.render("Choose levels", 1, BLACK)
-            screen.blit(text,(150,80))
+            text = font.render("Choose levels", True, BLACK)
+            screen.blit(text, (150, 80))
             self.easy_btn.draw(screen)
             self.medium_btn.draw(screen)
             self.hard_btn.draw(screen)
@@ -244,7 +223,6 @@ class GameController(object):
                         self.print()
                         self.update()
             pygame.display.update()
-
 
     def Solve(self):
         for i in range(N):
@@ -326,4 +304,3 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 exit()
         game.StartGame(game.screen)
-
