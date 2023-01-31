@@ -206,21 +206,25 @@ class GameController(object):
                         self.levels = EASY
                         self.board = Grid(N, self.levels, 9, 9, SCREENWIDTH, SCREENHEIGHT - 60)
                         self.print()
+                        self.start = time.time()
                         self.update()
                     elif self.medium_btn.check_click():
                         self.levels = MEDIUM
                         self.board = Grid(N, self.levels, 9, 9, SCREENWIDTH, SCREENHEIGHT - 60)
                         self.print()
+                        self.start = time.time()
                         self.update()
                     elif self.hard_btn.check_click():
                         self.levels = HARD
                         self.board = Grid(N, self.levels, 9, 9, SCREENWIDTH, SCREENHEIGHT - 60)
                         self.print()
+                        self.start = time.time()
                         self.update()
                     elif self.expert_btn.check_click():
                         self.levels = EXPERT
                         self.board = Grid(N, self.levels, 9, 9, SCREENWIDTH, SCREENHEIGHT - 60)
                         self.print()
+                        self.start = time.time()
                         self.update()
             pygame.display.update()
 
